@@ -4,7 +4,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
   Grid,
   Typography,
 } from '@material-ui/core';
@@ -30,6 +29,18 @@ function AddressForm({ checkoutToken }) {
     })
   );
 
+  const subdivisionsList = Object.entries(shippingSubDivisions).map(
+    ([code, name]) => ({
+      id: code,
+      label: name,
+    })
+  );
+
+  const optionList = shippingOptions.map((option) => ({
+    id: option.id,
+    label: `${option.description} - (${option.price.formatted_with_symbol})`,
+  }));
+
   useEffect(() => {
     const fetchShippingCountries = async () => {
       const { countries } = await commerce.services.localeListShippingCountries(
@@ -43,6 +54,35 @@ function AddressForm({ checkoutToken }) {
     fetchShippingCountries();
   }, []);
 
+  useEffect(() => {
+    const fetchSubDivisions = async () => {
+      const { subdivisions } = await commerce.services.localeListSubdivisions(
+        shippingCountry
+      );
+      setShippingSubDivisions(subdivisions);
+      setShippingSubDivision(Object.keys(subdivisions)[0]);
+    };
+
+    if (shippingCountry) fetchSubDivisions();
+  }, [shippingCountry]);
+
+  useEffect(() => {
+    const fetchShippingOptions = async () => {
+      const options = await commerce.checkout.getShippingOptions(
+        checkoutToken.id,
+        {
+          country: shippingCountry,
+          region: shippingSubDivision,
+        }
+      );
+
+      setShippingOptions(options);
+      setShippingOption(options[0].id);
+    };
+
+    if (shippingSubDivision) fetchShippingOptions();
+  }, [shippingSubDivision]);
+
   return (
     <div>
       <Typography variant='h6' gutterBottom>
@@ -51,12 +91,12 @@ function AddressForm({ checkoutToken }) {
       <FormProvider {...methods}>
         <form>
           <Grid container spacing={3}>
-            <FormInput name='firstName' label='First Name' required />
-            <FormInput name='lastName' label='Last Name' required />
-            <FormInput name='address1' label='Address' required />
-            <FormInput name='email' label='Email' required />
-            <FormInput name='city' label='City' required />
-            <FormInput name='zip' label='Zip / Postal Code' required />
+            <FormInput name='firstName' label='First Name' />
+            <FormInput name='lastName' label='Last Name' />
+            <FormInput name='address1' label='Address' />
+            <FormInput name='email' label='Email' />
+            <FormInput name='city' label='City' />
+            <FormInput name='zip' label='Zip / Postal Code' />
 
             <Grid item xs={12} sm={6}>
               <InputLabel>Shipping Country</InputLabel>
@@ -73,19 +113,35 @@ function AddressForm({ checkoutToken }) {
               </Select>
             </Grid>
 
-            {/* <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
               <InputLabel>Shipping Subdivision</InputLabel>
-              <Select value={} fullWidth onChange={}>
-              <MenuItem key={} value={}>Select Me</MenuItem>
+              <Select
+                value={shippingSubDivision}
+                fullWidth
+                onChange={(e) => setShippingSubDivision(e.target.value)}
+              >
+                {subdivisionsList.map((subdivision) => (
+                  <MenuItem key={subdivision.id} value={subdivision.id}>
+                    {subdivision.label}
+                  </MenuItem>
+                ))}
               </Select>
-            </Grid> */}
+            </Grid>
 
-            {/* <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>
               <InputLabel>Shipping Option</InputLabel>
-              <Select value={} fullWidth onChange={}>
-              <MenuItem key={} value={}>Select Me</MenuItem>
+              <Select
+                value={shippingOption}
+                fullWidth
+                onChange={(e) => setShippingOption(e.target.value)}
+              >
+                {optionList.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.label}
+                  </MenuItem>
+                ))}
               </Select>
-            </Grid> */}
+            </Grid>
           </Grid>
         </form>
       </FormProvider>

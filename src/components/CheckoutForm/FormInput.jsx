@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { TextField, Grid } from '@material-ui/core';
 import { useFormContext, Controller } from 'react-hook-form';
 
-function FormInput({ name, label, required }) {
+function FormInput({ name, label }) {
   const { control } = useFormContext();
 
   return (
     <Grid item xs={12} sm={6}>
       <Controller
-        render={() => <TextField fullWidth label={label} required={required} />}
+        render={() => <TextField fullWidth label={label} required />}
         control={control}
         name={name}
       />
@@ -20,7 +20,6 @@ function FormInput({ name, label, required }) {
 FormInput.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  required: PropTypes.bool.isRequired,
 };
 
 export default FormInput;
