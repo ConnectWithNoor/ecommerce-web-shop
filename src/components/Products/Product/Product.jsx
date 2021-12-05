@@ -14,7 +14,7 @@ import { AddShoppingCart } from '@material-ui/icons';
 
 import useStyles from './styles';
 
-function Product({ product }) {
+function Product({ product, onAddToCart }) {
   const classes = useStyles();
 
   return (
@@ -40,7 +40,10 @@ function Product({ product }) {
         />
       </CardContent>
       <CardActions disableSpacing className={classes.cardActions}>
-        <IconButton aria-label='Add to Cart'>
+        <IconButton
+          aria-label='Add to Cart'
+          onClick={() => onAddToCart(product.id, 1)}
+        >
           <AddShoppingCart />
         </IconButton>
       </CardActions>
@@ -50,17 +53,18 @@ function Product({ product }) {
 
 // Prop types for our Component
 Product.propTypes = {
-  product: PropTypes.objectOf(PropTypes.object),
+  product: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.bool,
+      PropTypes.object,
+      PropTypes.array,
+    ])
+  ).isRequired,
+  onAddToCart: PropTypes.func.isRequired,
 };
 
 // Default Props for our Componen
-Product.defaultProps = {
-  product: {
-    id: '1',
-    name: 'dummy',
-    price: '$1.0',
-    description: 'dummy description',
-  },
-};
 
 export default Product;

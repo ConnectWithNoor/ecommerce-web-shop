@@ -4,6 +4,7 @@ import { Products, Navbar } from './components';
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState({});
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -11,13 +12,24 @@ function App() {
       setProducts(data);
     };
 
+    const fetchCart = async () => {
+      const resp = await commerce.cart.retrieve();
+      setCart(resp);
+    };
+
     fetchProducts();
+    fetchCart();
   }, []);
+
+  const handleAddToCart = async (productId, quantity) => {
+    const item = await commerce.cart.add(productId, quantity);
+    setCart(item.cart);
+  };
 
   return (
     <div>
-      <Navbar />
-      <Products productsList={products} />
+      <Navbar totalItems={cart.total_items} />
+      <Products productsList={products} onAddToCart={handleAddToCart} />
     </div>
   );
 }

@@ -5,16 +5,16 @@ import Grid from '@material-ui/core/Grid';
 import Product from './Product/Product';
 import useStyles from './styles';
 
-function Products({ productsList }) {
+function Products({ productsList, onAddToCart }) {
   const classes = useStyles();
 
   return (
     <main classes={classes.content}>
       <div className={classes.toolbar} />
-      <Grid container justify='center' spacing={4}>
+      <Grid container justifyContent='center' spacing={4}>
         {productsList.map((p) => (
           <Grid item key={p.id} xs={12} sm={6} md={4} lg={3}>
-            <Product product={p} />
+            <Product product={p} onAddToCart={onAddToCart} />
           </Grid>
         ))}
       </Grid>
@@ -24,6 +24,7 @@ function Products({ productsList }) {
 
 Products.propTypes = {
   productsList: PropTypes.instanceOf(Array),
+  onAddToCart: PropTypes.func,
 };
 
 Products.defaultProps = {
@@ -35,6 +36,7 @@ Products.defaultProps = {
       description: 'dummy description',
     },
   ],
+  onAddToCart: () => {},
 };
 
 export default Products;
