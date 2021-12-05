@@ -6,7 +6,12 @@ import { Link } from 'react-router-dom';
 import useStyles from './styles';
 import CartItem from './CartItem/CartItem';
 
-function Cart({ cart }) {
+function Cart({
+  cart,
+  handleEmptyCart,
+  handleRemoveFromCart,
+  handleUpdateCartQuantity,
+}) {
   //   const isEmpty = true;
   const classes = useStyles();
 
@@ -18,7 +23,16 @@ function Cart({ cart }) {
       <Typography className={classes.title} variant='h3' gutterBottom>
         Your Shopping Cart
       </Typography>
-      {!cart?.line_items?.length ? <EmptyCart /> : <FilledCart cart={cart} />}
+      {!cart?.line_items?.length ? (
+        <EmptyCart />
+      ) : (
+        <FilledCart
+          cart={cart}
+          handleEmptyCart={handleEmptyCart}
+          handleRemoveFromCart={handleRemoveFromCart}
+          handleUpdateCartQuantity={handleUpdateCartQuantity}
+        />
+      )}
     </Container>
   );
 }
@@ -36,14 +50,23 @@ const EmptyCart = () => {
   );
 };
 
-const FilledCart = ({ cart }) => {
+const FilledCart = ({
+  cart,
+  handleEmptyCart,
+  handleRemoveFromCart,
+  handleUpdateCartQuantity,
+}) => {
   const classes = useStyles();
   return (
     <>
       <Grid container spacing={3}>
         {cart?.line_items?.map((item) => (
           <Grid item xs={12} sm={4} key={item.id}>
-            <CartItem item={item} />
+            <CartItem
+              item={item}
+              handleRemoveFromCart={handleRemoveFromCart}
+              handleUpdateCartQuantity={handleUpdateCartQuantity}
+            />
           </Grid>
         ))}
       </Grid>
@@ -59,6 +82,7 @@ const FilledCart = ({ cart }) => {
             type='button'
             variant='contained'
             color='secondary'
+            onClick={handleEmptyCart}
           >
             Empty Cart
           </Button>
@@ -88,6 +112,9 @@ Cart.propTypes = {
       PropTypes.array,
     ])
   ).isRequired,
+  handleEmptyCart: PropTypes.func.isRequired,
+  handleRemoveFromCart: PropTypes.func.isRequired,
+  handleUpdateCartQuantity: PropTypes.func.isRequired,
 };
 
 FilledCart.propTypes = {
@@ -100,6 +127,9 @@ FilledCart.propTypes = {
       PropTypes.array,
     ])
   ).isRequired,
+  handleEmptyCart: PropTypes.func.isRequired,
+  handleRemoveFromCart: PropTypes.func.isRequired,
+  handleUpdateCartQuantity: PropTypes.func.isRequired,
 };
 
 export default Cart;

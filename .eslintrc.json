@@ -23,6 +23,7 @@
     "no-unused-vars": "warn",
     "import/prefer-default-export": "off",
     "comma-dangle": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "react/jsx-wrap-multilines": "off"
   }
 }
