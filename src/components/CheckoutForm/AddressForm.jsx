@@ -6,13 +6,15 @@ import {
   MenuItem,
   Grid,
   Typography,
+  Button,
 } from '@material-ui/core';
 import { useForm, FormProvider } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
 import FormInput from './FormInput';
 import { commerce } from '../../lib/commerce';
 
-function AddressForm({ checkoutToken }) {
+function AddressForm({ checkoutToken, next }) {
   const [shippingCountries, setShippingCountries] = useState([]);
   const [shippingSubDivisions, setShippingSubDivisions] = useState([]);
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -89,7 +91,16 @@ function AddressForm({ checkoutToken }) {
         Shipping Address
       </Typography>
       <FormProvider {...methods}>
-        <form>
+        <form
+          onSubmit={methods.handleSubmit((data) =>
+            next({
+              ...data,
+              shippingCountry,
+              shippingSubDivision,
+              setShippingOption,
+            })
+          )}
+        >
           <Grid container spacing={3}>
             <FormInput name='firstName' label='First Name' />
             <FormInput name='lastName' label='Last Name' />
@@ -143,6 +154,15 @@ function AddressForm({ checkoutToken }) {
               </Select>
             </Grid>
           </Grid>
+          <br />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button component={Link} to='/cart' variant='outlined'>
+              Back to Cart
+            </Button>
+            <Button type='submit' color='primary' variant='contained'>
+              Next
+            </Button>
+          </div>
         </form>
       </FormProvider>
     </div>
@@ -159,6 +179,7 @@ AddressForm.propTypes = {
       PropTypes.array,
     ])
   ).isRequired,
+  next: PropTypes.func.isRequired,
 };
 
 export default AddressForm;

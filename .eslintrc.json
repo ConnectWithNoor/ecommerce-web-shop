@@ -27,6 +27,7 @@
     "react/jsx-wrap-multilines": "off",
     "react/jsx-props-no-spreading": "off",
     "no-confusing-arrow": "off",
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "function-paren-newline": "off"
   }
 }

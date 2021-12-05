@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PaymentForm() {
+function PaymentForm({ shippingData }) {
   return <div>PaymentForm</div>;
 }
 
