@@ -1,4 +1,5 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {
   Paper,
   Stepper,
@@ -14,18 +15,36 @@ import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
 
 import useStyle from './styles';
+import { commerce } from '../../../lib/commerce';
 
 const steps = ['Shipping Address', 'Payment Details'];
 
 const Confirmation = () => <div>Confirm</div>;
 
-function Checkout() {
+function Checkout({ cart }) {
   const [activeStep, setActiveStep] = useState(0);
-
+  const [checkoutToken, setCheckoutToken] = useState(null);
   const classes = useStyle();
 
+  useEffect(() => {
+    const generateToken = async () => {
+      const token = await commerce.checkout.generateToken(cart.id, {
+        type: 'cart',
+      });
+
+      setCheckoutToken(token);
+    };
+
+    generateToken();
+  }, [cart]);
+
   const Form = memo(
-    () => (activeStep === 0 ? <AddressForm /> : <PaymentForm />),
+    () =>
+      activeStep === 0 ? (
+        <AddressForm checkoutToken={checkoutToken} />
+      ) : (
+        <PaymentForm />
+      ),
     [activeStep]
   );
 
@@ -44,11 +63,27 @@ function Checkout() {
               </Step>
             ))}
           </Stepper>
-          {activeStep === steps.length ? <Confirmation /> : <Form />}
+          {activeStep === steps.length ? (
+            <Confirmation />
+          ) : (
+            checkoutToken && <Form />
+          )}
         </Paper>
       </main>
     </div>
   );
 }
+
+Checkout.propTypes = {
+  cart: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.bool,
+      PropTypes.object,
+      PropTypes.array,
+    ])
+  ).isRequired,
+};
 
 export default Checkout;
