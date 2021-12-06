@@ -31,6 +31,14 @@
     "function-paren-newline": "off",
     "no-console": "off",
     "react/destructuring-assignment": "off",
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "react/no-unstable-nested-components": "off",
+    "react/no-namespace": "off",
+    "react/prefer-exact-props": "off",
+    "react/no-arrow-function-lifecycle": "off",
+    "react/no-invalid-html-attribute": "off",
+    "react/no-unused-class-component-methods": "off",
+    "import/no-import-module-exports": "off",
+    "import/no-relative-packages": "off"
   }
 }
