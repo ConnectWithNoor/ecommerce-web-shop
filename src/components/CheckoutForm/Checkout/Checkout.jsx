@@ -9,8 +9,9 @@ import {
   CircularProgress,
   Divider,
   Button,
+  CssBaseline,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
 
@@ -24,14 +25,20 @@ function Checkout({ cart, handleCaptureCheckout, order, error }) {
   const [checkoutToken, setCheckoutToken] = useState(null);
   const [shippingData, setShippingData] = useState({});
   const classes = useStyle();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const generateToken = async () => {
-      const token = await commerce.checkout.generateToken(cart.id, {
-        type: 'cart',
-      });
+      try {
+        const token = await commerce.checkout.generateToken(cart.id, {
+          type: 'cart',
+        });
 
-      setCheckoutToken(token);
+        setCheckoutToken(token);
+      } catch (err) {
+        console.error(err);
+        navigate('/');
+      }
     };
 
     generateToken();
@@ -110,6 +117,7 @@ function Checkout({ cart, handleCaptureCheckout, order, error }) {
 
   return (
     <div>
+      <CssBaseline />
       <div className={classes.toolbar} />
       <main className={classes.layout}>
         <Paper className={classes.paper}>
