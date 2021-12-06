@@ -57,11 +57,15 @@ function Checkout({ cart }) {
       activeStep === 0 ? (
         <AddressForm checkoutToken={checkoutToken} next={next} />
       ) : (
-        <PaymentForm shippingData={shippingData} />
-        //2:42
+        <PaymentForm
+          shippingData={shippingData}
+          checkoutToken={checkoutToken}
+        />
       ),
     [activeStep]
   );
+
+  console.log(activeStep, steps);
 
   return (
     <div>
@@ -71,7 +75,7 @@ function Checkout({ cart }) {
           <Typography variant='h4' align='center'>
             Checkout
           </Typography>
-          <Stepper active={activeStep} className={classes.stepper}>
+          <Stepper activeStep={activeStep} className={classes.stepper}>
             {steps.map((step) => (
               <Step key={step}>
                 <StepLabel>{step}</StepLabel>
