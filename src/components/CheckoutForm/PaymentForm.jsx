@@ -17,6 +17,7 @@ function PaymentForm({
   backStep,
   handleCaptureCheckout,
   nextStep,
+  timeout,
 }) {
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
@@ -60,12 +61,8 @@ function PaymentForm({
         },
       };
 
-      console.log('orderData', orderData);
-      console.log('shippingData', shippingData);
-      console.log('paymentMethod', paymentMethod);
-
-      // await handleCaptureCheckout(checkoutToken.id, orderData);
-
+      await handleCaptureCheckout(checkoutToken.id, orderData);
+      timeout();
       nextStep();
     }
   };
@@ -126,6 +123,7 @@ PaymentForm.propTypes = {
   backStep: PropTypes.func.isRequired,
   handleCaptureCheckout: PropTypes.func.isRequired,
   nextStep: PropTypes.func.isRequired,
+  timeout: PropTypes.func.isRequired,
 };
 
 export default PaymentForm;

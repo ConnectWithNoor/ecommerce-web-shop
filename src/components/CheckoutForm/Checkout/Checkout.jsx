@@ -24,6 +24,8 @@ function Checkout({ cart, handleCaptureCheckout, order, error }) {
   const [activeStep, setActiveStep] = useState(0);
   const [checkoutToken, setCheckoutToken] = useState(null);
   const [shippingData, setShippingData] = useState({});
+  const [isFinished, setIsFinished] = useState(false);
+
   const classes = useStyle();
   const navigate = useNavigate();
 
@@ -53,9 +55,14 @@ function Checkout({ cart, handleCaptureCheckout, order, error }) {
   };
 
   const next = (data) => {
-    console.log('d', data);
     setShippingData(data);
     nextStep();
+  };
+
+  const timeout = () => {
+    setTimeout(() => {
+      setIsFinished(true);
+    }, 3000);
   };
 
   const Confirmation = memo(
@@ -75,7 +82,18 @@ function Checkout({ cart, handleCaptureCheckout, order, error }) {
             </Typography>
           </div>
           <br />
-          <Button variant='outlied' type='button' as={Link} to='/'>
+          <Button variant='outlined' type='button' as={Link} to='/'>
+            Back to home
+          </Button>
+        </div>
+      ) : isFinished ? (
+        <div>
+          <div>
+            <Typography variant='h5'>Thank you for your purchase,</Typography>
+            <Divider classes={classes.divider} />
+          </div>
+          <br />
+          <Button variant='outlined' type='button' as={Link} to='/'>
             Back to home
           </Button>
         </div>
@@ -94,7 +112,7 @@ function Checkout({ cart, handleCaptureCheckout, order, error }) {
         {error}
       </Typography>
       <br />
-      <Button variant='outlied' type='button' as={Link} to='/'>
+      <Button variant='outlined' type='button' as={Link} to='/'>
         Back to home
       </Button>
     </div>;
@@ -111,6 +129,7 @@ function Checkout({ cart, handleCaptureCheckout, order, error }) {
           backStep={backStep}
           handleCaptureCheckout={handleCaptureCheckout}
           nextStep={nextStep}
+          timeout={timeout}
         />
       ),
     [activeStep]

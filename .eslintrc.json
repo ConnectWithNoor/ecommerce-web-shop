@@ -30,6 +30,7 @@
     "implicit-arrow-linebreak": "off",
     "function-paren-newline": "off",
     "no-console": "off",
-    "react/destructuring-assignment": "off"
+    "react/destructuring-assignment": "off",
+    "no-nested-ternary": "off"
   }
 }
