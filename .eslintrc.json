@@ -28,6 +28,8 @@
     "react/jsx-props-no-spreading": "off",
     "no-confusing-arrow": "off",
     "implicit-arrow-linebreak": "off",
-    "function-paren-newline": "off"
+    "function-paren-newline": "off",
+    "no-console": "off",
+    "react/destructuring-assignment": "off"
   }
 }

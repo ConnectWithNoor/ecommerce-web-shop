@@ -10,7 +10,7 @@ import {
   Divider,
   Button,
 } from '@material-ui/core';
-
+import { Link } from 'react-router-dom';
 import AddressForm from '../AddressForm';
 import PaymentForm from '../PaymentForm';
 
@@ -19,9 +19,7 @@ import { commerce } from '../../../lib/commerce';
 
 const steps = ['Shipping Address', 'Payment Details'];
 
-const Confirmation = () => <div>Confirm</div>;
-
-function Checkout({ cart }) {
+function Checkout({ cart, handleCaptureCheckout, order, error }) {
   const [activeStep, setActiveStep] = useState(0);
   const [checkoutToken, setCheckoutToken] = useState(null);
   const [shippingData, setShippingData] = useState({});
@@ -52,6 +50,48 @@ function Checkout({ cart }) {
     nextStep();
   };
 
+  const Confirmation = memo(
+    () =>
+      order.customer ? (
+        <div>
+          <div>
+            <Typography variant='h5'>
+              Thank you for your purchase,
+              {order.customer.firstname}
+              {order.customer.lastname}
+            </Typography>
+            <Divider classes={classes.divider} />
+            <Typography variant='subtitle2'>
+              Order Reference:
+              {order.customer_reference}
+            </Typography>
+          </div>
+          <br />
+          <Button variant='outlied' type='button' as={Link} to='/'>
+            Back to home
+          </Button>
+        </div>
+      ) : (
+        <div className={classes.spinner}>
+          <CircularProgress />
+        </div>
+      ),
+    [order]
+  );
+
+  if (error) {
+    <div>
+      <Typography variant='h5'>
+        Error:
+        {error}
+      </Typography>
+      <br />
+      <Button variant='outlied' type='button' as={Link} to='/'>
+        Back to home
+      </Button>
+    </div>;
+  }
+
   const Form = memo(
     () =>
       activeStep === 0 ? (
@@ -60,12 +100,13 @@ function Checkout({ cart }) {
         <PaymentForm
           shippingData={shippingData}
           checkoutToken={checkoutToken}
+          backStep={backStep}
+          handleCaptureCheckout={handleCaptureCheckout}
+          nextStep={nextStep}
         />
       ),
     [activeStep]
   );
-
-  console.log(activeStep, steps);
 
   return (
     <div>
@@ -83,7 +124,7 @@ function Checkout({ cart }) {
             ))}
           </Stepper>
           {activeStep === steps.length ? (
-            <Confirmation />
+            <Confirmation order={order} />
           ) : (
             checkoutToken && <Form />
           )}
@@ -103,6 +144,17 @@ Checkout.propTypes = {
       PropTypes.array,
     ])
   ).isRequired,
+  order: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+      PropTypes.bool,
+      PropTypes.object,
+      PropTypes.array,
+    ])
+  ).isRequired,
+  handleCaptureCheckout: PropTypes.func.isRequired,
+  error: PropTypes.string.isRequired,
 };
 
 export default Checkout;
