@@ -53,6 +53,7 @@ function Checkout({ cart, handleCaptureCheckout, order, error }) {
   };
 
   const next = (data) => {
+    console.log('d', data);
     setShippingData(data);
     nextStep();
   };

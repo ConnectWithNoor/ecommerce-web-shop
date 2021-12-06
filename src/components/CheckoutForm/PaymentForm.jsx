@@ -60,7 +60,12 @@ function PaymentForm({
         },
       };
 
-      await handleCaptureCheckout(checkoutToken.id, orderData);
+      console.log('orderData', orderData);
+      console.log('shippingData', shippingData);
+      console.log('paymentMethod', paymentMethod);
+
+      // await handleCaptureCheckout(checkoutToken.id, orderData);
+
       nextStep();
     }
   };

@@ -97,7 +97,7 @@ function AddressForm({ checkoutToken, next }) {
               ...data,
               shippingCountry,
               shippingSubDivision,
-              setShippingOption,
+              shippingOption,
             })
           )}
         >
